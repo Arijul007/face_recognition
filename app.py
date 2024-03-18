@@ -43,10 +43,12 @@ def match():
                 response = []
                 for i in range(len(test_images)):
                     unknown_face = np.array(test_images[i])
-                    unknown_face_encoding = face_recognition.face_encodings(unknown_face)[0]
-                    result = face_recognition.compare_faces([original_face_encoding], unknown_face_encoding)
-                    if result[0]:
-                        response.append(data["test_images"][i])
+                    unknown_face_encodings = face_recognition.face_encodings(unknown_face)
+                    for unknown_face_encoding in unknown_face_encodings:
+                        result = face_recognition.compare_faces([original_face_encoding], unknown_face_encoding)
+                        if result[0]:
+                            response.append(data["test_images"][i])
+                            break
                 return jsonify(response), 200
             except Exception as e:
                 return jsonify({"error": f"Unable to process images: {str(e)}"}), 400
